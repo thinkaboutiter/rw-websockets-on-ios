@@ -7,5 +7,6 @@ target 'EmojiTransmitter' do
 
   # Pods for EmojiTransmitter
   pod 'Starscream', '~> 3.0'
+  pod "SimpleLogger", :git => "https://github.com/thinkaboutiter/SimpleLogger.git", :tag => "1.1.3"
 
 end
