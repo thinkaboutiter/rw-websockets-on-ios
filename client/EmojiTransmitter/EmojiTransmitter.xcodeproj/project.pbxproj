@@ -19,15 +19,15 @@
 
 /* Begin PBXFileReference section */
 		1182A3C8D079472E00D2FC1B /* Pods-EmojiTransmitter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EmojiTransmitter.release.xcconfig"; path = "Pods/Target Support Files/Pods-EmojiTransmitter/Pods-EmojiTransmitter.release.xcconfig"; sourceTree = "<group>"; };
-		934813201D74FFC900E32BE4 /* UsernameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsernameViewController.swift; sourceTree = "<group>"; };
+		934813201D74FFC900E32BE4 /* UsernameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = UsernameViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		938C24F61D7395E8008DAAF0 /* EmojiTransmitter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmojiTransmitter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		938C24F91D7395E8008DAAF0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		938C24FB1D7395E8008DAAF0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		938C24F91D7395E8008DAAF0 /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 4; };
+		938C24FB1D7395E8008DAAF0 /* ViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		938C24FE1D7395E8008DAAF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		938C25001D7395E8008DAAF0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		938C25031D7395E8008DAAF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		938C25051D7395E8008DAAF0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		938C250B1D74F1EC008DAAF0 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		938C250B1D74F1EC008DAAF0 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		95F9893F5EDCB7323212E6B3 /* Pods-EmojiTransmitter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EmojiTransmitter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EmojiTransmitter/Pods-EmojiTransmitter.debug.xcconfig"; sourceTree = "<group>"; };
 		EC5DB70B7A0FC1F647E74598 /* Pods_EmojiTransmitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EmojiTransmitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */

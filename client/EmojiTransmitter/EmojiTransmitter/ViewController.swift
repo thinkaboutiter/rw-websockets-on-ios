@@ -23,44 +23,44 @@
 import UIKit
 
 final class ViewController: UIViewController {
-
-  // MARK: - Properties
-  var username = ""
-
-  // MARK: - IBOutlets
-  @IBOutlet var emojiLabel: UILabel!
-  @IBOutlet var usernameLabel: UILabel!
-
-  // MARK: - View Life Cycle
-  override func viewDidLoad() {
-    super.viewDidLoad()
-
-    navigationItem.hidesBackButton = true
-  }
+    
+    // MARK: - Properties
+    var username = ""
+    
+    // MARK: - IBOutlets
+    @IBOutlet var emojiLabel: UILabel!
+    @IBOutlet var usernameLabel: UILabel!
+    
+    // MARK: - View Life Cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.hidesBackButton = true
+    }
 }
 
 // MARK: - IBActions
 extension ViewController {
-
-  @IBAction func selectedEmojiUnwind(unwindSegue: UIStoryboardSegue) {
-    guard let viewController = unwindSegue.source as? CollectionViewController,
-      let emoji = viewController.selectedEmoji() else{
-        return
+    
+    @IBAction func selectedEmojiUnwind(unwindSegue: UIStoryboardSegue) {
+        guard let viewController = unwindSegue.source as? CollectionViewController,
+            let emoji = viewController.selectedEmoji() else{
+                return
+        }
+        
+        sendMessage(emoji)
     }
-
-    sendMessage(emoji)
-  }
 }
 
 // MARK: - FilePrivate
 fileprivate extension ViewController {
-
-  func sendMessage(_ message: String) {
-    print("NOOP - sendMessage: \(message)")
-  }
-
-  func messageReceived(_ message: String, senderName: String) {
-    emojiLabel.text = message
-    usernameLabel.text = senderName
-  }
+    
+    func sendMessage(_ message: String) {
+        print("NOOP - sendMessage: \(message)")
+    }
+    
+    func messageReceived(_ message: String, senderName: String) {
+        emojiLabel.text = message
+        usernameLabel.text = senderName
+    }
 }
