@@ -4,7 +4,7 @@
   "description": "websocket app",
   "main": "chat-server.js",
   "dependencies": {
-    "websocket": "^1.0.23"
+    "websocket": "^1.0.24"
   },
   "devDependencies": {},
   "scripts": {
