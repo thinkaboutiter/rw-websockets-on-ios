@@ -21,21 +21,48 @@
  */
 
 import UIKit
+import SimpleLogger
+import Starscream
 
 final class ViewController: UIViewController {
     
     // MARK: - Properties
-    var username = ""
+    var username: String = ""
+    var socket: WebSocket = WebSocket(url: URL(string: ViewController.Constants.ServerUrlString.base)!, protocols: [ViewController.Constants.WebSocketProtocol.chat])
     
     // MARK: - IBOutlets
     @IBOutlet var emojiLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
     
+    // MARK: - Initializaiton
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    deinit {
+        self.socket.disconnect(forceTimeout: 0)
+        self.socket.delegate = nil
+        
+        Logger.debug.message("\(String(describing: ViewController.self)) deinitialized!")
+    }
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.hidesBackButton = true
+        // configurations
+        self.navigationItem.hidesBackButton = true
+        
+        self.configure(self.socket)
+    }
+}
+
+// MARK: - Configurations
+fileprivate extension ViewController {
+    
+    fileprivate func configure(_ webSocket: WebSocket) {
+        webSocket.delegate = self
+        webSocket.connect()
     }
 }
 
@@ -43,12 +70,78 @@ final class ViewController: UIViewController {
 extension ViewController {
     
     @IBAction func selectedEmojiUnwind(unwindSegue: UIStoryboardSegue) {
-        guard let viewController = unwindSegue.source as? CollectionViewController,
-            let emoji = viewController.selectedEmoji() else{
+        guard
+            let viewController = unwindSegue.source as? CollectionViewController,
+            let emoji = viewController.selectedEmoji()
+        else {
                 return
         }
         
-        sendMessage(emoji)
+        self.sendMessage(emoji)
+    }
+}
+
+// MARK: - WebSocketDelegate
+extension ViewController: WebSocketDelegate {
+    
+    func websocketDidConnect(socket: WebSocketClient) {
+        Logger.network.message("WebSocket connected!")
+        
+        self.sendMessage(self.username)
+    }
+    
+    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        Logger.network.message("WebSocket disconected!")
+        
+        self.performSegue(withIdentifier: ViewController.Constants.SegueIdentifier.websocketDisconnected, sender: self)
+    }
+    
+    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        // obtaining data and serializing it to json
+        guard let valid_data: Data = text.data(using: .utf16) else {
+            Logger.error.message("Unable to obtatin \(String(describing: Data.self)) object")
+            return
+        }
+        guard let valid_jsonData: Any = try? JSONSerialization.jsonObject(with: valid_data, options: JSONSerialization.ReadingOptions.allowFragments) else {
+            Logger.error.message("Unable to serialize jsonData!")
+            return
+        }
+        guard let valid_jsonDict: [String: Any] = valid_jsonData as? [String: Any] else {
+            Logger.error.message("Unable to construnc json dictionary!")
+            return
+        }
+        
+        Logger.network.message("Message data:").object(valid_jsonDict)
+        
+        guard let valid_messagaType: String = valid_jsonDict[ViewController.Constants.JsonKey.type.rawValue] as? String else {
+            Logger.error.message("Unable to obtain message type")
+            return
+        }
+        
+        // message
+        if valid_messagaType == ViewController.Constants.MessageType.message {
+            
+            // obtain message
+            guard let valid_messageData: [String: Any] = valid_jsonDict[ViewController.Constants.JsonKey.data.rawValue] as? [String: Any] else {
+                Logger.error.message("Unable to obtain message data!")
+                return
+            }
+            guard let valid_messageAuthor: String = valid_messageData[ViewController.Constants.JsonKey.author.rawValue] as? String else {
+                Logger.error.message("Unable to obtain message author!")
+                return
+            }
+            guard let valid_messageText: String = valid_messageData[ViewController.Constants.JsonKey.text.rawValue] as? String else {
+                Logger.error.message("Unable to obtain message text!")
+                return
+            }
+            
+            // update ui
+            self.messageReceived(valid_messageText, senderName: valid_messageAuthor)
+        }
+    }
+    
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        // TODO: implement
     }
 }
 
@@ -56,11 +149,41 @@ extension ViewController {
 fileprivate extension ViewController {
     
     func sendMessage(_ message: String) {
-        print("NOOP - sendMessage: \(message)")
+        self.socket.write(string: message)
     }
     
     func messageReceived(_ message: String, senderName: String) {
-        emojiLabel.text = message
-        usernameLabel.text = senderName
+        self.emojiLabel.text = message
+        self.usernameLabel.text = senderName
+    }
+}
+
+// MARK: - Constants
+fileprivate extension ViewController {
+    
+    fileprivate struct Constants {
+        
+        fileprivate struct ServerUrlString {
+            static let base: String = "ws://localhost:1337/"
+        }
+        
+        fileprivate struct SegueIdentifier {
+            static let websocketDisconnected: String = "websocketDisconnected"
+        }
+        
+        fileprivate struct WebSocketProtocol {
+            static let chat: String = "chat"
+        }
+        
+        fileprivate enum JsonKey: String {
+            case type
+            case data
+            case author
+            case text
+        }
+        
+        fileprivate struct MessageType {
+            static let message: String = "message"
+        }
     }
 }

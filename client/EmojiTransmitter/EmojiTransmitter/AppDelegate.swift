@@ -21,9 +21,31 @@
  */
 
 import UIKit
+import SimpleLogger
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        self.configure_3rdParties()
+        
+        return true
+    }
+}
+
+// MARK: - 3rd parties configurations
+
+fileprivate extension AppDelegate {
+    
+    fileprivate func configure_3rdParties() {
+        self.configure_simpleLogger()
+    }
+    
+    private func configure_simpleLogger() {
+        #if DEBUG
+            Logger.enableLogging(true)
+        #endif
+    }
 }
