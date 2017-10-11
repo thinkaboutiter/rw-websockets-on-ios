@@ -21,21 +21,36 @@
  */
 
 import UIKit
+import SimpleLogger
+import Starscream
 
 final class ViewController: UIViewController {
     
     // MARK: - Properties
-    var username = ""
+    var username: String = ""
+    var socket: WebSocket = WebSocket(url: URL(string: ViewController.Constants.serverUrlString)!, protocols: [ViewController.Constants.Protocols.chat])
     
     // MARK: - IBOutlets
     @IBOutlet var emojiLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
     
+    // MARK: - Initializaiton
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    deinit {
+        self.socket.disconnect(forceTimeout: 0)
+        self.socket.delegate = nil
+        
+        Logger.debug.message("\(String(describing: ViewController.self)) deinitialized!")
+    }
+    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.hidesBackButton = true
+        self.navigationItem.hidesBackButton = true
     }
 }
 
@@ -43,12 +58,14 @@ final class ViewController: UIViewController {
 extension ViewController {
     
     @IBAction func selectedEmojiUnwind(unwindSegue: UIStoryboardSegue) {
-        guard let viewController = unwindSegue.source as? CollectionViewController,
-            let emoji = viewController.selectedEmoji() else{
+        guard
+            let viewController = unwindSegue.source as? CollectionViewController,
+            let emoji = viewController.selectedEmoji()
+        else {
                 return
         }
         
-        sendMessage(emoji)
+        self.sendMessage(emoji)
     }
 }
 
@@ -62,5 +79,17 @@ fileprivate extension ViewController {
     func messageReceived(_ message: String, senderName: String) {
         emojiLabel.text = message
         usernameLabel.text = senderName
+    }
+}
+
+// MARK: - Constants
+fileprivate extension ViewController {
+    
+    fileprivate struct Constants {
+        static let serverUrlString: String = "ws://localhost:1337/"
+        
+        fileprivate struct Protocols {
+            static let chat: String = "chat"
+        }
     }
 }
