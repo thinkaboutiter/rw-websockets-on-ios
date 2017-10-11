@@ -28,7 +28,7 @@ final class ViewController: UIViewController {
     
     // MARK: - Properties
     var username: String = ""
-    var socket: WebSocket = WebSocket(url: URL(string: ViewController.Constants.serverUrlString)!, protocols: [ViewController.Constants.Protocols.chat])
+    var socket: WebSocket = WebSocket(url: URL(string: ViewController.Constants.ServerUrlString.base)!, protocols: [ViewController.Constants.WebSocketProtocol.chat])
     
     // MARK: - IBOutlets
     @IBOutlet var emojiLabel: UILabel!
@@ -117,10 +117,21 @@ fileprivate extension ViewController {
 fileprivate extension ViewController {
     
     fileprivate struct Constants {
-        static let serverUrlString: String = "ws://localhost:1337/"
         
-        fileprivate struct Protocols {
+        fileprivate struct ServerUrlString {
+            static let base: String = "ws://localhost:1337/"
+        }
+        
+        fileprivate struct SegueIdentifier {
+            static let websocketDisconnected: String = "websocketDisconnected"
+        }
+        
+        fileprivate struct WebSocketProtocol {
             static let chat: String = "chat"
+        }
+        
+        fileprivate struct JsonKey {
+            static let type: String = "type"
         }
     }
 }
