@@ -50,7 +50,19 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // configurations
         self.navigationItem.hidesBackButton = true
+        
+        self.configure(self.socket)
+    }
+}
+
+// MARK: - Configurations
+fileprivate extension ViewController {
+    
+    fileprivate func configure(_ webSocket: WebSocket) {
+        webSocket.delegate = self
+        webSocket.connect()
     }
 }
 
@@ -66,6 +78,25 @@ extension ViewController {
         }
         
         self.sendMessage(emoji)
+    }
+}
+
+// MARK: - WebSocketDelegate
+extension ViewController: WebSocketDelegate {
+    func websocketDidConnect(socket: WebSocketClient) {
+        // TODO: implement
+    }
+    
+    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        // TODO: implement
+    }
+    
+    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        // TODO: implement
+    }
+    
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        // TODO: implement
     }
 }
 
