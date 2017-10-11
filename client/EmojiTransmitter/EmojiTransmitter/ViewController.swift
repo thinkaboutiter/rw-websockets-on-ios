@@ -86,6 +86,8 @@ extension ViewController: WebSocketDelegate {
     
     func websocketDidConnect(socket: WebSocketClient) {
         Logger.network.message("WebSocket connected!")
+        
+        self.sendMessage(self.username)
     }
     
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
@@ -108,31 +110,34 @@ extension ViewController: WebSocketDelegate {
             Logger.error.message("Unable to construnc json dictionary!")
             return
         }
+        
+        Logger.network.message("Message data:").object(valid_jsonDict)
+        
         guard let valid_messagaType: String = valid_jsonDict[ViewController.Constants.JsonKey.type.rawValue] as? String else {
             Logger.error.message("Unable to obtain message type")
             return
         }
         
-        // message data
-        guard valid_messagaType == ViewController.Constants.MessageType.message else {
-            Logger.error.message("Invalid message type: \(valid_messagaType)! Expected: \(ViewController.Constants.MessageType.message)")
-            return
+        // message
+        if valid_messagaType == ViewController.Constants.MessageType.message {
+            
+            // obtain message
+            guard let valid_messageData: [String: Any] = valid_jsonDict[ViewController.Constants.JsonKey.data.rawValue] as? [String: Any] else {
+                Logger.error.message("Unable to obtain message data!")
+                return
+            }
+            guard let valid_messageAuthor: String = valid_messageData[ViewController.Constants.JsonKey.author.rawValue] as? String else {
+                Logger.error.message("Unable to obtain message author!")
+                return
+            }
+            guard let valid_messageText: String = valid_messageData[ViewController.Constants.JsonKey.text.rawValue] as? String else {
+                Logger.error.message("Unable to obtain message text!")
+                return
+            }
+            
+            // update ui
+            self.messageReceived(valid_messageText, senderName: valid_messageAuthor)
         }
-        guard let valid_messageData: [String: Any] = valid_jsonDict[ViewController.Constants.JsonKey.data.rawValue] as? [String: Any] else {
-            Logger.error.message("Unable to obtain message data!")
-            return
-        }
-        guard let valid_messageAuthor: String = valid_messageData[ViewController.Constants.JsonKey.author.rawValue] as? String else {
-            Logger.error.message("Unable to obtain message author!")
-            return
-        }
-        guard let valid_messageText: String = valid_messageData[ViewController.Constants.JsonKey.text.rawValue] as? String else {
-            Logger.error.message("Unable to obtain message text!")
-            return
-        }
-        
-        // update ui
-        self.messageReceived(valid_messageText, senderName: valid_messageAuthor)
     }
     
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
